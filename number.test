@@ -1,0 +1,52 @@
+<?php
+
+class NumberTests extends DrupalUnitTestCase {
+    public static function getInfo() {
+        return array(
+            'name' => 'Numbers in words',
+            'description' => 'Create a custom module that translates numbers in numeric form into written words.',
+            'group' => 'Epicodus Examples Tests',
+        );
+    }
+
+    function testNumber() {
+        $result = test_number($_SESSION['result'] = 1);
+        $message ='You input the number: one';
+        $this->assertEqual($result, $message);
+    }
+    function testNumber2() {
+        $result = test_number($_SESSION['result'] = 17);
+        $message ='You input the number: seventeen';
+        $this->assertEqual($result, $message);
+    }
+    function testNumbermorethen19() {
+        $result = test_number(20);
+        $message ='You input the number: twenty ';
+        $this->assertEqual($result, $message);
+    }
+    function testNumbermorethen100() {
+        $result = test_number($_SESSION['result'] = 200);
+        $message ='You input the number: two hundred ';
+        $this->assertEqual($result, $message);
+    }
+    function testNumbermorethen1000() {
+        $result = test_number($_SESSION['result'] = 2000);
+        $message ='You input the number: two thousand ' ;
+        $this->assertEqual($result, $message);
+    }
+
+
+
+
+
+
+
+
+    // public function setUp() {
+    //     parent::setUp(array('number'));
+    // }
+    //
+    // public function testNumber() {
+    //
+    // }
+}

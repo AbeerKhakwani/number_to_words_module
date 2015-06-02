@@ -1,0 +1,103 @@
+<?php
+
+function number_menu() {
+
+    $items['numberToWords'] = array(
+        'title' => 'Number To Words',
+        'page callback' =>'drupal_get_form',
+        'page arguments' =>array(
+            'number_form'
+        ),
+        'access callback' =>TRUE,
+        'type'=> MENU_NORMAL_ITEM
+    );
+     $items['words'] = array(
+        'title' => 'Numbers test',
+        'page callback' => 'test_number',
+        'access callback' => TRUE,
+        'type' => MENU_CALLBACK,
+    );
+    return $items;
+}
+
+function number_form(){
+    $form['number'] = array(
+    '#title' => 'Count Goal',
+    '#type' => 'textfield',
+    '#description' => t('Please enter the number you want to convert to words.'),
+    '#element_validate' => array('element_validate_integer_positive'),
+    '#required' => TRUE,
+    );
+    $form['submit']     = array(
+    '#type' => 'submit',
+    '#value' => 'Go'
+    );
+    return $form;
+}
+
+function number_form_submit($form, &$form_state) {
+    $number = $form_state['values']['number'];
+    $_SESSION['result'] =$number;
+    $form_state['redirect'] = 'words';
+}
+
+
+function test_number() {
+
+     $array_number =array (
+        1 => 'one',2  => 'two', 3 => 'three', 4 => 'four', 5 => 'five', 6 => 'six', 7 => 'seven', 8 => 'eight', 9 => 'nine', 10 => 'ten', 11 => 'eleven', 12 => 'twelve',
+        13 => 'thirteen', 14 =>'fourteen', 15 => 'fifteen',16=> 'sixteen', 17 =>'seventeen', 18 => 'eighteen', 19 => 'nineteen',
+     );
+     $array_number2 = array(
+        2 => 'twenty', 3 => 'thirty', 4 => 'forty' , 5 =>'fifty' , 6 => 'sixty', 7 => 'seventy' , 8 => 'eighty', 9 =>'ninty',
+     );
+    //  $array_number3 =array (
+    //     0 => '', 1 => 'one thousand ',2  => 'two thousand ', 3 => 'three thousand ', 4 => 'four thousand ', 5 => 'five thousand  ', 6 => 'six thousand ', 7 => 'seven thousand ', 8 => 'eight thousand ', 9 => 'nine thousand ', 10 => 'ten thousand '
+    //  );
+
+     $word_returned = '';
+     $number = $_SESSION['result'];
+
+     $current_number = $number;
+     if ($current_number > 19999){
+        $split_number= stringit($number);
+        $word_returned .= ' ' . $array_number2[$split_number[4]] . $array_number[$split_number[3]] . ' thousand ';
+        $current_number = $split_number[2] . $split_number[1]. $split_number[0];
+
+     }
+     if (($current_number < 19999) && ($current_number > 9999)) {
+         $split_number= stringit($number);
+         $test = $split_number[4] . $split_number[3];
+         $word_returned .= $array_number[$test]. ' thousand ';
+         $current_number = $split_number[2] . $split_number[1]. $split_number[0];
+
+     }
+
+     if (($current_number > 999) && ($current_number < 9999)) {
+        $split_number= stringit($number);
+        $word_returned .= $array_number[$split_number[3]] . ' thousand ';
+        $current_number = $split_number[2] . $split_number[1]. $split_number[0];
+
+     }
+     if (($current_number >= 99) && ($current_number <=  999)){
+         $split_number= stringit($number);
+         $word_returned .= $array_number[$split_number[2]] . ' hundred ';
+
+     }
+     if ($number > 19) {
+        $split_number= stringit($number);
+       $word_returned .= ' ' . $array_number2[$split_number[1]];
+       $word_returned .= ' ' . $array_number[$split_number[0]];
+     } else {
+         $word_returned .= $array_number[$number];
+     }
+
+     return 'You input the number: ' . $word_returned;
+
+}
+
+function stringit($number){
+    $split_number = str_split($number);
+    $split_number = array_reverse($split_number);
+    return $split_number;
+}
